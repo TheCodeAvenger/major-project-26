@@ -1,3 +1,9 @@
 <?php
-echo "Hello Krishna 🚀 Your Project Started!";
+session_start();
+
+if (isset($_SESSION['admin'])) {
+    header("Location: dashboard.php");
+} else {
+    header("Location: login.php");
+}
 ?>

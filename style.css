@@ -1,0 +1,65 @@
+/* Background */
+body {
+background: linear-gradient(to right, #373b44, #4286f4);
+  height: 100vh;
+  margin: 0;
+
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+/* Container glass effect */
+.container {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.small-text {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+.brand-text {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: black;
+    transition: 0.3s ease;
+    display: inline-block;
+}
+.brand-text:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+/* Cards */
+.card {
+    border-radius: 15px;
+    transition: 0.3s;
+    border: none;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* Table */
+.table {
+    background: white;
+    color: black;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Headings */
+h2 {
+    font-weight: bold;
+}
