@@ -8,8 +8,8 @@ if (!isset($_SESSION['admin'])) {
 
 include "db.php";
 
-// 📅 Selected date logic (IMPORTANT)
-$date = isset($_POST['date']) ? $_POST['date'] : date("Y-m-d");
+// 📅 Selected date logic (GET + POST support)
+$date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date("Y-m-d");
 ?>
 
 <!DOCTYPE html>
@@ -26,13 +26,15 @@ $date = isset($_POST['date']) ? $_POST['date'] : date("Y-m-d");
 <div class="container mt-5">
     <h2 class="mb-4 text-center">📝 Mark Attendance</h2>
 
+    <!-- FORM -->
     <form method="POST">
 
-        <!-- 📅 DATE INPUT -->
+        <!-- 📅 DATE INPUT (AUTO SUBMIT) -->
         <div class="mb-3">
             <label>Select Date:</label>
-            <input type="date" name="date" class="form-control" required 
-                   value="<?php echo $date; ?>">
+            <input type="date" name="date" class="form-control" 
+                   value="<?php echo $date; ?>" 
+                   onchange="this.form.submit()">
         </div>
 
         <table class="table table-bordered">
@@ -75,7 +77,9 @@ while ($row = mysqli_fetch_assoc($result)) {
 
         </table>
 
-        <button type="submit" name="submit" class="btn btn-success w-100">Save Attendance</button>
+        <button type="submit" name="submit" class="btn btn-success w-100">
+            Save Attendance
+        </button>
 
     </form>
 </div>
@@ -86,7 +90,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 <?php
 if (isset($_POST['submit'])) {
 
-    $date = $_POST['date']; // ✅ selected date use
+    $date = $_POST['date'];
 
     foreach ($_POST['attendance'] as $student_id => $status) {
 
@@ -108,6 +112,7 @@ if (isset($_POST['submit'])) {
         mysqli_query($conn, $query);
     }
 
-    echo "<script>alert('Attendance Saved Successfully!'); window.location.href='attendance.php';</script>";
+    echo "<script>alert('Attendance Saved Successfully!'); 
+          window.location.href='attendance.php?date=$date';</script>";
 }
 ?>
