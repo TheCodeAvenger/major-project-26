@@ -128,6 +128,6 @@ if (mysqli_num_rows($result) == 0) {
 
     </table>
 </div>
-
+<?php include "footer.php"; ?>
 </body>
 </html>

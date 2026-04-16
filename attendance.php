@@ -83,7 +83,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     </form>
 </div>
-
+<?php include "footer.php"; ?>
 </body>
 </html>
 

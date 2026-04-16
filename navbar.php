@@ -96,6 +96,13 @@
           </a>
         </li>
 
+        <!-- 💀 NEW ANALYTICS -->
+        <li class="nav-item">
+          <a class="nav-link <?php if($page=='analytics.php') echo 'active-link'; ?>" href="analytics.php">
+            📊 Analytics
+          </a>
+        </li>
+
       </ul>
 
       <!-- LOGOUT -->

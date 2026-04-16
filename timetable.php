@@ -86,6 +86,6 @@ if (isset($_POST['add'])) {
 
     </form>
 </div>
-
+<?php include "footer.php"; ?>
 </body>
 </html>

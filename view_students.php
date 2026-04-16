@@ -9,21 +9,17 @@ if (!isset($_SESSION['admin'])) {
 include "db.php";
 ?>
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>View Students</title>
 
     <link rel="stylesheet" href="style.css">
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
 <?php include "navbar.php"; ?>
 
 <div class="container mt-5">
@@ -35,6 +31,45 @@ include "db.php";
             <i class="fas fa-user-plus"></i> Add Student
         </a>
     </div>
+
+    <!-- 🔍 SEARCH + FILTER -->
+    <form method="GET" class="row mb-4">
+
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control"
+                   placeholder="Search by name..."
+                   value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
+        </div>
+
+        <div class="col-md-3">
+            <select name="class" class="form-control">
+                <option value="">All Classes</option>
+                <?php
+                $c = mysqli_query($conn, "SELECT * FROM classes");
+                while($row = mysqli_fetch_assoc($c)){
+                    echo "<option>". $row['class_name'] ."</option>";
+                }
+                ?>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="section" class="form-control">
+                <option value="">All Sections</option>
+                <?php
+                $s = mysqli_query($conn, "SELECT * FROM sections");
+                while($row = mysqli_fetch_assoc($s)){
+                    echo "<option>". $row['section_name'] ."</option>";
+                }
+                ?>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">Search</button>
+        </div>
+
+    </form>
 
     <table class="table table-bordered table-striped table-hover">
         <thead class="table-dark">
@@ -49,12 +84,40 @@ include "db.php";
         </thead>
 
         <tbody>
-        <?php
-        $query = "SELECT * FROM students";
-        $result = mysqli_query($conn, $query);
 
-        while ($row = mysqli_fetch_assoc($result)) {
-        ?>
+<?php
+$where = [];
+
+if (!empty($_GET['search'])) {
+    $search = $_GET['search'];
+    $where[] = "name LIKE '%$search%'";
+}
+
+if (!empty($_GET['class'])) {
+    $class = $_GET['class'];
+    $where[] = "class = '$class'";
+}
+
+if (!empty($_GET['section'])) {
+    $section = $_GET['section'];
+    $where[] = "section = '$section'";
+}
+
+$whereSQL = "";
+if (!empty($where)) {
+    $whereSQL = "WHERE " . implode(" AND ", $where);
+}
+
+$query = "SELECT * FROM students $whereSQL";
+$result = mysqli_query($conn, $query);
+
+if(mysqli_num_rows($result) == 0){
+    echo "<tr><td colspan='6' class='text-center'>No students found 😔</td></tr>";
+} else {
+
+    while ($row = mysqli_fetch_assoc($result)) {
+?>
+
             <tr>
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['name']; ?></td>
@@ -73,12 +136,17 @@ include "db.php";
                     </a>
                 </td>
             </tr>
-        <?php } ?>
+
+<?php 
+    }
+}
+?>
+
         </tbody>
 
     </table>
 
 </div>
-
+<?php include "footer.php"; ?>
 </body>
 </html>

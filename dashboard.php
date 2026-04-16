@@ -31,6 +31,9 @@ include "db.php";
             backdrop-filter: blur(10px);
             border-radius: 15px;
             color: white;
+
+            /* 🔥 TEXT VISIBILITY FIX */
+            text-shadow: 0 0 6px rgba(0,0,0,0.6);
         }
 
         .card:hover {
@@ -44,9 +47,20 @@ include "db.php";
 
         small {
             font-size: 12px;
-            opacity: 0.9;
+            opacity: 0.95;
             display: block;
             margin-top: 5px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+
+        /* 🔥 HEADINGS CLEAR */
+        h2, h3, h4, h5 {
+            text-shadow: 0 0 8px rgba(0,0,0,0.7);
+        }
+
+        /* 🔥 TIMETABLE TEXT */
+        .timetable-box {
+            text-shadow: 0 0 5px rgba(0,0,0,0.6);
         }
     </style>
 </head>
@@ -149,7 +163,52 @@ $attendance_percent = ($total_attendance > 0) ? round(($present / $total_attenda
 
     </div>
 
-</div>
+    <!-- 💀 TODAY TIMETABLE -->
+    <div class="mt-5 timetable-box">
 
+        <h4>📅 Today’s Timetable</h4>
+
+        <?php
+        $today = date("Y-m-d");
+
+        $query = "SELECT * FROM timetable 
+                  WHERE date='$today' 
+                  ORDER BY class, section, time";
+
+        $result = mysqli_query($conn, $query);
+
+        $current_group = "";
+
+        if (mysqli_num_rows($result) == 0) {
+            echo "<p>No classes scheduled today 😔</p>";
+        } else {
+
+            while ($row = mysqli_fetch_assoc($result)) {
+
+                $group = $row['class'] . "-" . $row['section'];
+
+                if ($group != $current_group) {
+
+                    if ($current_group != "") {
+                        echo "</div>";
+                    }
+
+                    echo "<div class='mb-3'>";
+                    echo "<strong>Class " . $row['class'] . " - Section " . $row['section'] . "</strong><br>";
+
+                    $current_group = $group;
+                }
+
+                echo "• " . $row['subject'] . " - " . date("h:i A", strtotime($row['time'])) . "<br>";
+            }
+
+            echo "</div>";
+        }
+        ?>
+
+    </div>
+
+</div>
+<?php include "footer.php"; ?>
 </body>
 </html>
