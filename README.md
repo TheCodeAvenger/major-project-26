@@ -92,7 +92,7 @@ http://localhost/edutrack-pro/
 
 ## Screenshots : 
 
-##⚠️ Limitations
+## ⚠️ Limitations
 - Single user system (no roles)
 - Basic UI (no mobile optimization)
 - No authentication security layers
@@ -103,7 +103,7 @@ http://localhost/edutrack-pro/
 - Notifications system
 - Advanced analytics & graphs
 
-##👨‍💻 Author
+## 👨‍💻 Author
 
 - Krishna Namdev
 - BCA Final Year Project (2026)
