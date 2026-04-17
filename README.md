@@ -55,7 +55,8 @@ It helps manage students, attendance, and timetable efficiently through a clean 
 
 ## 📂 Folder Structure
 
-edutrack-pro/
+edutrack-pro/ 
+
 │
 ├── dashboard.php
 ├── add_student.php
