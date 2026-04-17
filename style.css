@@ -1,40 +1,71 @@
 /* Background */
 body {
     background: linear-gradient(to right, #373b44, #4286f4);
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
     color: white;
 }
 
-/* Container glass effect (FIXED) */
+/* Container */
 .container {
-    background: rgba(0, 0, 0, 0.25); /* darker for better contrast */
+    background: rgba(0, 0, 0, 0.25);
     padding: 25px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
+    color: #ffffff;
 }
 
-/* Small text */
-.small-text {
-    font-size: 16px;
-    font-weight: 400;
-    opacity: 0.85;
+/* 🔥 TEXT FIX (ONLY TEXT, NOT EVERYTHING) */
+.container h1,
+.container h2,
+.container h3,
+.container h4,
+.container h5,
+.container h6,
+.container p,
+.container span,
+.container label,
+.container small {
+    color: #ffffff !important;
+    text-shadow: 0 0 5px rgba(0,0,0,0.6);
 }
 
-/* Brand text (FIXED) */
-.brand-text {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #ffffff; /* fixed from black */
-    transition: 0.3s ease;
-    display: inline-block;
+/* ❌ TABLE SAFE */
+.table,
+.table * {
+    color: #000000 !important;
+    background-color: #ffffff;
 }
 
-.brand-text:hover {
-    transform: scale(1.1);
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+/* 💀 INPUT FIX (STRONG TARGETING) */
+.form-control {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* ALSO COVER NORMAL INPUTS */
+input, select, textarea {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Focus */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #4286f4;
+    box-shadow: 0 0 5px rgba(66,134,244,0.5);
+}
+
+/* Placeholder */
+::placeholder {
+    color: #666 !important;
+}
+
+/* Labels */
+label {
+    color: #ffffff !important;
+    font-weight: 500;
 }
 
 /* Cards */
@@ -52,27 +83,22 @@ body {
 .btn {
     border-radius: 10px;
     font-weight: bold;
+    text-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 
-/* Table */
-.table {
-    background: white;
-    color: black;
-    border-radius: 10px;
-    overflow: hidden;
+/* Brand */
+.brand-text {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ffffff;
 }
 
-/* Headings */
-h2 {
-    font-weight: bold;
+.brand-text:hover {
+    transform: scale(1.1);
 }
 
-/* 🔥 GLOBAL TEXT VISIBILITY FIX */
-h2, h3, h4, h5, p, small {
-    text-shadow: 0 0 6px rgba(0,0,0,0.6);
-}
-
-/* 🔥 Optional timetable polish */
+/* Timetable */
 .timetable-box {
     padding: 10px;
     border-radius: 10px;

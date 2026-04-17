@@ -12,7 +12,7 @@ include "db.php";
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Timetable</title>
+    <title>View Timetable | EduTrack Pro</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -29,7 +29,7 @@ include "db.php";
         <div class="col-md-3">
             <label>Date:</label>
             <input type="date" name="date" class="form-control"
-                   value="<?php echo isset($_GET['date']) ? $_GET['date'] : ''; ?>">
+                   value="<?php echo isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); ?>">
         </div>
 
         <div class="col-md-3">
@@ -39,7 +39,8 @@ include "db.php";
                 <?php
                 $c = mysqli_query($conn, "SELECT * FROM classes");
                 while($row = mysqli_fetch_assoc($c)){
-                    echo "<option>".$row['class_name']."</option>";
+                    $selected = (isset($_GET['class']) && $_GET['class'] == $row['class_name']) ? 'selected' : '';
+                    echo "<option $selected>".$row['class_name']."</option>";
                 }
                 ?>
             </select>
@@ -52,7 +53,8 @@ include "db.php";
                 <?php
                 $s = mysqli_query($conn, "SELECT * FROM sections");
                 while($row = mysqli_fetch_assoc($s)){
-                    echo "<option>".$row['section_name']."</option>";
+                    $selected = (isset($_GET['section']) && $_GET['section'] == $row['section_name']) ? 'selected' : '';
+                    echo "<option $selected>".$row['section_name']."</option>";
                 }
                 ?>
             </select>
@@ -64,7 +66,7 @@ include "db.php";
 
     </form>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped text-center">
         <tr class="table-dark">
             <th>Class</th>
             <th>Section</th>
@@ -76,10 +78,11 @@ include "db.php";
 <?php
 $where = [];
 
-// Filters
-if (!empty($_GET['date'])) {
-    $where[] = "date = '".$_GET['date']."'";
-}
+// 💀 DEFAULT DATE FIX
+$date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date("Y-m-d");
+$where[] = "date = '$date'";
+
+// Optional filters
 if (!empty($_GET['class'])) {
     $where[] = "class = '".$_GET['class']."'";
 }
@@ -88,19 +91,16 @@ if (!empty($_GET['section'])) {
 }
 
 // Build WHERE
-$whereSQL = "";
-if (!empty($where)) {
-    $whereSQL = "WHERE " . implode(" AND ", $where);
-}
+$whereSQL = "WHERE " . implode(" AND ", $where);
 
 // Query
-$query = "SELECT * FROM timetable $whereSQL ORDER BY date DESC, time ASC";
+$query = "SELECT * FROM timetable $whereSQL ORDER BY time ASC";
 
 $result = mysqli_query($conn, $query);
 
 // No data
 if (mysqli_num_rows($result) == 0) {
-    echo "<tr><td colspan='5' class='text-center'>No timetable found 😔</td></tr>";
+    echo "<tr><td colspan='5' class='text-center'>No timetable found for this date 😔</td></tr>";
 } else {
     while ($row = mysqli_fetch_assoc($result)) {
 ?>
@@ -118,6 +118,8 @@ if (mysqli_num_rows($result) == 0) {
 
     </table>
 </div>
+
 <?php include "footer.php"; ?>
+
 </body>
 </html>

@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin'])) {
 
 include "db.php";
 
-// Add timetable
+// ➕ Add timetable
 if (isset($_POST['add'])) {
     $class = $_POST['class'];
     $section = $_POST['section'];
@@ -20,12 +20,31 @@ if (isset($_POST['add'])) {
         (class, section, subject, date, time)
         VALUES ('$class','$section','$subject','$date','$time')");
 }
+
+// 💀 AUTO COPY (MAIN FEATURE)
+if (isset($_POST['copy'])) {
+
+    $new_date = $_POST['copy_date'];
+
+    // previous date
+    $prev_date = date('Y-m-d', strtotime($new_date . ' -1 day'));
+
+    // copy query
+    $query = "INSERT INTO timetable (class, section, subject, date, time)
+              SELECT class, section, subject, '$new_date', time
+              FROM timetable
+              WHERE date = '$prev_date'";
+
+    mysqli_query($conn, $query);
+
+    echo "<script>alert('Timetable copied from previous day ✅');</script>";
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Timetable</title>
+    <title>Timetable | EduTrack Pro</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -36,9 +55,19 @@ if (isset($_POST['add'])) {
 <div class="container mt-5">
     <h2 class="text-center mb-4">📅 Manage Timetable</h2>
 
+    <!-- 💀 AUTO COPY SECTION -->
+    <form method="POST" class="mb-4">
+        <label>Copy Previous Day Timetable:</label>
+        <input type="date" name="copy_date" class="form-control mb-2" required>
+        <button name="copy" class="btn btn-warning w-100">⚡ Copy From Previous Day</button>
+    </form>
+
+    <hr>
+
+    <!-- ➕ ADD TIMETABLE -->
     <form method="POST">
 
-        <!-- CLASS DROPDOWN -->
+        <!-- CLASS -->
         <label>Class:</label>
         <select name="class" class="form-control mb-2" required>
             <option value="">Select Class</option>
@@ -50,7 +79,7 @@ if (isset($_POST['add'])) {
             ?>
         </select>
 
-        <!-- SECTION DROPDOWN -->
+        <!-- SECTION -->
         <label>Section:</label>
         <select name="section" class="form-control mb-2" required>
             <option value="">Select Section</option>
@@ -62,7 +91,7 @@ if (isset($_POST['add'])) {
             ?>
         </select>
 
-        <!-- SUBJECT DROPDOWN -->
+        <!-- SUBJECT -->
         <label>Subject:</label>
         <select name="subject" class="form-control mb-2" required>
             <option value="">Select Subject</option>
@@ -86,6 +115,8 @@ if (isset($_POST['add'])) {
 
     </form>
 </div>
+
 <?php include "footer.php"; ?>
+
 </body>
 </html>
