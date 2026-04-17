@@ -92,6 +92,22 @@ http://localhost/edutrack-pro/
 
 ## Screenshots : 
 
+# 📊 Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+# 👥 Students
+![Students](screenshots/students.png)
+
+# 📝 Attendance
+![Attendance](screenshots/attendance.png)
+
+# 📅 Timetable
+![Timetable](screenshots/timetable.png)
+
+# 📈 Analytics
+![Analytics](screenshots/analytics.png)
+
+
 ## ⚠️ Limitations
 - Single user system (no roles)
 - Basic UI (no mobile optimization)
