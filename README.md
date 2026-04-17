@@ -92,19 +92,19 @@ http://localhost/edutrack-pro/
 
 ## Screenshots : 
 
-# 📊 Dashboard
+- 📊 Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-# 👥 Students
+- 👥 Students
 ![Students](screenshots/students.png)
 
-# 📝 Attendance
+- 📝 Attendance
 ![Attendance](screenshots/attendance.png)
 
-# 📅 Timetable
+- 📅 Timetable
 ![Timetable](screenshots/timetable.png)
 
-# 📈 Analytics
+- 📈 Analytics
 ![Analytics](screenshots/analytics.png)
 
 
