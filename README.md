@@ -92,20 +92,23 @@ http://localhost/edutrack-pro/
 
 ## Screenshots : 
 
+- 🚀login
+![Login](Screenshots/login.png)
+
 - 📊 Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](Screenshots/dashboard.png)
 
 - 👥 Students
-![Students](screenshots/students.png)
+![Students](Screenshots/students.png)
 
 - 📝 Attendance
-![Attendance](screenshots/attendance.png)
+![Attendance](Screenshots/attendance.png)
 
 - 📅 Timetable
-![Timetable](screenshots/timetable.png)
+![Timetable](Screenshots/timetable.png)
 
 - 📈 Analytics
-![Analytics](screenshots/analytics.png)
+![Analytics](Screenshots/analytics.png)
 
 
 ## ⚠️ Limitations
