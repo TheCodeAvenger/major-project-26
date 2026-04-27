@@ -4,17 +4,31 @@ include "db.php";
 
 if (isset($_POST['login'])) {
 
-    $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM admin WHERE username='$username' AND password='$password'";
+    // 🔥 USERS TABLE LOGIN
+    $query = "SELECT * FROM users WHERE email='$email' AND password='$password'";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) > 0) {
-        $_SESSION['admin'] = $username;
-        header("Location: dashboard.php");
+
+        $user = mysqli_fetch_assoc($result);
+
+        // 💀 SESSION STORE
+        $_SESSION['user'] = $user;
+
+        // 💀 ROLE BASED REDIRECT
+        if ($user['role'] == 'admin') {
+            header("Location: dashboard.php");
+        } elseif ($user['role'] == 'teacher') {
+            header("Location: teacher_dashboard.php");
+        } else {
+            header("Location: student_dashboard.php");
+        }
+
     } else {
-        echo "<script>alert('Invalid Login');</script>";
+        echo "<script>alert('Invalid Login ❌');</script>";
     }
 }
 ?>
@@ -22,13 +36,10 @@ if (isset($_POST['login'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Login | EduTrack Pro</title>
 
     <link rel="stylesheet" href="style.css">
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -55,27 +66,33 @@ if (isset($_POST['login'])) {
         }
     </style>
 </head>
+
 <body class="d-flex justify-content-center align-items-center">
 
 <div class="login-box col-md-4 text-center">
 
-<h2 class="text-center mb-2 small-text">
-    🎓 Welcome Back To
-</h2>
+    <h2 class="text-center mb-2 small-text">
+        🎓 Welcome Back To
+    </h2>
 
-<h1 class="text-center brand-text mb-3">
-    EduTrack Pro
-</h1>
+    <h1 class="text-center brand-text mb-3">
+        EduTrack Pro
+    </h1>
 
-<p class="text-center">Manage your students smartly 🚀</p>
+    <p class="text-center">Manage your students smartly 🚀</p>
 
     <form method="POST">
-        <input type="text" name="username" class="form-control mb-3" placeholder="👤 Username" required>
+
+        <!-- 🔥 EMAIL INPUT -->
+        <input type="email" name="email" class="form-control mb-3" placeholder="📧 Email" required>
+
+        <!-- 🔑 PASSWORD -->
         <input type="password" name="password" class="form-control mb-3" placeholder="🔑 Password" required>
 
         <button name="login" class="btn btn-primary w-100">
             <i class="fas fa-sign-in-alt"></i> Login
         </button>
+
     </form>
 
 </div>
