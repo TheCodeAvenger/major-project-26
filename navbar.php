@@ -7,26 +7,22 @@
     z-index: 1000;
 }
 
-/* Links */
 .nav-link {
     transition: 0.3s;
     font-weight: 500;
 }
 
-/* Hover effect */
 .nav-link:hover {
     color: #ffc107 !important;
     transform: translateY(-2px);
     text-shadow: 0 0 5px rgba(255,193,7,0.6);
 }
 
-/* Active link */
 .active-link {
     color: #ffc107 !important;
     font-weight: bold;
 }
 
-/* Brand */
 .navbar-brand {
     letter-spacing: 1px;
     transition: 0.3s;
@@ -36,7 +32,6 @@
     color: #ffc107 !important;
 }
 
-/* Logout button */
 .btn-danger {
     border-radius: 8px;
     padding: 5px 12px;
@@ -46,7 +41,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
   <div class="container-fluid">
 
-    <!-- BRAND -->
     <a class="navbar-brand fw-bold" href="dashboard.php">
       🎓 EduTrack Pro
     </a>
@@ -96,7 +90,13 @@
           </a>
         </li>
 
-        <!-- 💀 NEW ANALYTICS -->
+        <!-- 💀 SUBJECTS EXPLORER -->
+        <li class="nav-item">
+          <a class="nav-link <?php if($page=='subjects_view.php') echo 'active-link'; ?>" href="subjects_view.php">
+            📚 Subjects
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link <?php if($page=='analytics.php') echo 'active-link'; ?>" href="analytics.php">
             📊 Analytics
@@ -105,7 +105,6 @@
 
       </ul>
 
-      <!-- LOGOUT -->
       <a href="logout.php" class="btn btn-danger btn-sm">
         🔴 Logout
       </a>

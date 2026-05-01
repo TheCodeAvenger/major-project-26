@@ -7,15 +7,13 @@ if (!isset($_SESSION['admin'])) {
 }
 
 include "db.php";
-?>
 
-<?php
-
-
+// 🔥 GET STUDENT
 $id = $_GET['id'];
 $result = mysqli_query($conn, "SELECT * FROM students WHERE id=$id");
 $row = mysqli_fetch_assoc($result);
 
+// 🔥 UPDATE
 if (isset($_POST['update'])) {
     $name = $_POST['name'];
     $class = $_POST['class'];
@@ -27,19 +25,21 @@ if (isset($_POST['update'])) {
               WHERE id=$id";
 
     mysqli_query($conn, $query);
-    header("Location: view_students.php");
+
+    echo "<script>alert('Student Updated Successfully ✅'); window.location.href='view_students.php';</script>";
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Student</title>
-<link rel="stylesheet" href="style.css">
-    <!-- Bootstrap -->
+    <title>Edit Student | EduTrack Pro</title>
+
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
 <?php include "navbar.php"; ?>
 
 <div class="container mt-5">
@@ -53,29 +53,21 @@ if (isset($_POST['update'])) {
             <input type="text" name="name" class="form-control" value="<?php echo $row['name']; ?>" required>
         </div>
 
+        <!-- 💀 FIXED CLASS -->
         <div class="mb-3">
             <label>Class:</label>
             <select name="class" class="form-control" required>
-                <?php
-                $class_query = mysqli_query($conn, "SELECT * FROM classes");
-                while ($c = mysqli_fetch_assoc($class_query)) {
-                    $selected = ($c['class_name'] == $row['class']) ? "selected" : "";
-                    echo "<option value='{$c['class_name']}' $selected>{$c['class_name']}</option>";
-                }
-                ?>
+                <option value="11" <?php if($row['class']=='11') echo 'selected'; ?>>11</option>
+                <option value="12" <?php if($row['class']=='12') echo 'selected'; ?>>12</option>
             </select>
         </div>
 
+        <!-- 💀 FIXED SECTION -->
         <div class="mb-3">
             <label>Section:</label>
             <select name="section" class="form-control" required>
-                <?php
-                $sec_query = mysqli_query($conn, "SELECT * FROM sections");
-                while ($s = mysqli_fetch_assoc($sec_query)) {
-                    $selected = ($s['section_name'] == $row['section']) ? "selected" : "";
-                    echo "<option value='{$s['section_name']}' $selected>{$s['section_name']}</option>";
-                }
-                ?>
+                <option value="PCM" <?php if($row['section']=='PCM') echo 'selected'; ?>>PCM</option>
+                <option value="PCB" <?php if($row['section']=='PCB') echo 'selected'; ?>>PCB</option>
             </select>
         </div>
 
@@ -91,6 +83,8 @@ if (isset($_POST['update'])) {
     </form>
 
 </div>
+
+<?php include "footer.php"; ?>
 
 </body>
 </html>

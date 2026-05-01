@@ -12,7 +12,7 @@ include "db.php";
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Students</title>
+    <title>View Students | EduTrack Pro</title>
 
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -35,33 +35,28 @@ include "db.php";
     <!-- 🔍 SEARCH + FILTER -->
     <form method="GET" class="row mb-4">
 
+        <!-- 🔍 SEARCH -->
         <div class="col-md-4">
             <input type="text" name="search" class="form-control"
                    placeholder="Search by name..."
-                   value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
+                   value="<?php echo $_GET['search'] ?? ''; ?>">
         </div>
 
+        <!-- 💀 FIXED CLASS FILTER -->
         <div class="col-md-3">
             <select name="class" class="form-control">
                 <option value="">All Classes</option>
-                <?php
-                $c = mysqli_query($conn, "SELECT * FROM classes");
-                while($row = mysqli_fetch_assoc($c)){
-                    echo "<option>". $row['class_name'] ."</option>";
-                }
-                ?>
+                <option value="11" <?php if(($_GET['class'] ?? '')=='11') echo 'selected'; ?>>11</option>
+                <option value="12" <?php if(($_GET['class'] ?? '')=='12') echo 'selected'; ?>>12</option>
             </select>
         </div>
 
+        <!-- 💀 FIXED SECTION FILTER -->
         <div class="col-md-3">
             <select name="section" class="form-control">
                 <option value="">All Sections</option>
-                <?php
-                $s = mysqli_query($conn, "SELECT * FROM sections");
-                while($row = mysqli_fetch_assoc($s)){
-                    echo "<option>". $row['section_name'] ."</option>";
-                }
-                ?>
+                <option value="PCM" <?php if(($_GET['section'] ?? '')=='PCM') echo 'selected'; ?>>PCM</option>
+                <option value="PCB" <?php if(($_GET['section'] ?? '')=='PCB') echo 'selected'; ?>>PCB</option>
             </select>
         </div>
 
@@ -71,7 +66,7 @@ include "db.php";
 
     </form>
 
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-striped table-hover text-center">
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
@@ -108,34 +103,34 @@ if (!empty($where)) {
     $whereSQL = "WHERE " . implode(" AND ", $where);
 }
 
-$query = "SELECT * FROM students $whereSQL";
+$query = "SELECT * FROM students $whereSQL ORDER BY class, section, roll_no";
 $result = mysqli_query($conn, $query);
 
 if(mysqli_num_rows($result) == 0){
-    echo "<tr><td colspan='6' class='text-center'>No students found 😔</td></tr>";
+    echo "<tr><td colspan='6'>No students found 😔</td></tr>";
 } else {
 
     while ($row = mysqli_fetch_assoc($result)) {
 ?>
 
-            <tr>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['name']; ?></td>
-                <td><?php echo $row['class']; ?></td>
-                <td><?php echo $row['section']; ?></td>
-                <td><?php echo $row['roll_no']; ?></td>
-                <td>
-                    <a href="edit_student.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i>
-                    </a>
+        <tr>
+            <td><?php echo $row['id']; ?></td>
+            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['class']; ?></td>
+            <td><?php echo $row['section']; ?></td>
+            <td><?php echo $row['roll_no']; ?></td>
+            <td>
+                <a href="edit_student.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                </a>
 
-                    <a href="delete_student.php?id=<?php echo $row['id']; ?>" 
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure you want to delete this student?');">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
+                <a href="delete_student.php?id=<?php echo $row['id']; ?>" 
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this student?');">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </td>
+        </tr>
 
 <?php 
     }
@@ -147,6 +142,8 @@ if(mysqli_num_rows($result) == 0){
     </table>
 
 </div>
+
 <?php include "footer.php"; ?>
+
 </body>
 </html>

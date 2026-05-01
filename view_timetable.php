@@ -23,40 +23,31 @@ include "db.php";
 <div class="container mt-5">
     <h2 class="mb-4 text-center">📅 Timetable Records</h2>
 
-    <!-- 🔍 FILTER -->
     <form method="GET" class="row mb-4">
 
         <div class="col-md-3">
             <label>Date:</label>
             <input type="date" name="date" class="form-control"
-                   value="<?php echo isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); ?>">
+                   value="<?php echo $_GET['date'] ?? date('Y-m-d'); ?>">
         </div>
 
+        <!-- 💀 FIXED CLASS -->
         <div class="col-md-3">
             <label>Class:</label>
             <select name="class" class="form-control">
                 <option value="">All</option>
-                <?php
-                $c = mysqli_query($conn, "SELECT * FROM classes");
-                while($row = mysqli_fetch_assoc($c)){
-                    $selected = (isset($_GET['class']) && $_GET['class'] == $row['class_name']) ? 'selected' : '';
-                    echo "<option $selected>".$row['class_name']."</option>";
-                }
-                ?>
+                <option value="11" <?php if(($_GET['class'] ?? '')=='11') echo 'selected'; ?>>11</option>
+                <option value="12" <?php if(($_GET['class'] ?? '')=='12') echo 'selected'; ?>>12</option>
             </select>
         </div>
 
+        <!-- 💀 FIXED SECTION -->
         <div class="col-md-3">
             <label>Section:</label>
             <select name="section" class="form-control">
                 <option value="">All</option>
-                <?php
-                $s = mysqli_query($conn, "SELECT * FROM sections");
-                while($row = mysqli_fetch_assoc($s)){
-                    $selected = (isset($_GET['section']) && $_GET['section'] == $row['section_name']) ? 'selected' : '';
-                    echo "<option $selected>".$row['section_name']."</option>";
-                }
-                ?>
+                <option value="PCM" <?php if(($_GET['section'] ?? '')=='PCM') echo 'selected'; ?>>PCM</option>
+                <option value="PCB" <?php if(($_GET['section'] ?? '')=='PCB') echo 'selected'; ?>>PCB</option>
             </select>
         </div>
 
@@ -66,7 +57,7 @@ include "db.php";
 
     </form>
 
-    <table class="table table-bordered table-striped text-center">
+    <table class="table table-bordered text-center">
         <tr class="table-dark">
             <th>Class</th>
             <th>Section</th>
@@ -76,45 +67,34 @@ include "db.php";
         </tr>
 
 <?php
-$where = [];
+$date = $_GET['date'] ?? date("Y-m-d");
 
-// 💀 DEFAULT DATE FIX
-$date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date("Y-m-d");
-$where[] = "date = '$date'";
+$where = ["date='$date'"];
 
-// Optional filters
 if (!empty($_GET['class'])) {
-    $where[] = "class = '".$_GET['class']."'";
+    $where[] = "class='".$_GET['class']."'";
 }
 if (!empty($_GET['section'])) {
-    $where[] = "section = '".$_GET['section']."'";
+    $where[] = "section='".$_GET['section']."'";
 }
 
-// Build WHERE
 $whereSQL = "WHERE " . implode(" AND ", $where);
 
-// Query
-$query = "SELECT * FROM timetable $whereSQL ORDER BY time ASC";
+$result = mysqli_query($conn, "SELECT * FROM timetable $whereSQL ORDER BY time");
 
-$result = mysqli_query($conn, $query);
-
-// No data
-if (mysqli_num_rows($result) == 0) {
-    echo "<tr><td colspan='5' class='text-center'>No timetable found for this date 😔</td></tr>";
+if(mysqli_num_rows($result)==0){
+    echo "<tr><td colspan='5'>No timetable 😔</td></tr>";
 } else {
-    while ($row = mysqli_fetch_assoc($result)) {
+    while($row = mysqli_fetch_assoc($result)){
 ?>
-        <tr>
-            <td><?php echo $row['class']; ?></td>
-            <td><?php echo $row['section']; ?></td>
-            <td><?php echo $row['subject']; ?></td>
-            <td><?php echo $row['date']; ?></td>
-            <td><?php echo date("h:i A", strtotime($row['time'])); ?></td>
-        </tr>
-<?php 
-    }
-}
-?>
+<tr>
+    <td><?php echo $row['class']; ?></td>
+    <td><?php echo $row['section']; ?></td>
+    <td><?php echo $row['subject']; ?></td>
+    <td><?php echo $row['date']; ?></td>
+    <td><?php echo date("h:i A", strtotime($row['time'])); ?></td>
+</tr>
+<?php }} ?>
 
     </table>
 </div>

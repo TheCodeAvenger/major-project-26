@@ -1,4 +1,4 @@
-<?php 
+<?php  
 session_start();
 
 if (!isset($_SESSION['admin'])) {
@@ -7,6 +7,15 @@ if (!isset($_SESSION['admin'])) {
 }
 
 include "db.php";
+
+// 🔥 BULK DELETE LOGIC
+if (isset($_POST['delete_selected'])) {
+    if (!empty($_POST['selected'])) {
+        $ids = implode(",", $_POST['selected']);
+        mysqli_query($conn, "DELETE FROM attendance WHERE id IN ($ids)");
+        echo "<script>alert('Selected records deleted successfully 💀'); window.location.href='view_attendance.php';</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,50 +32,40 @@ include "db.php";
 <div class="container mt-5">
     <h2 class="mb-4 text-center">📊 Attendance Records</h2>
 
-    <!-- 🔍 FILTER SECTION -->
+    <!-- 🔍 FILTER -->
     <form method="GET" class="mb-4 row">
-
         <div class="col-md-4">
             <label>Select Date:</label>
             <input type="date" name="date" class="form-control" 
-                   value="<?php echo isset($_GET['date']) ? $_GET['date'] : ''; ?>">
+                   value="<?php echo $_GET['date'] ?? ''; ?>">
         </div>
 
         <div class="col-md-4">
             <label>Select Month:</label>
             <input type="month" name="month" class="form-control" 
-                   value="<?php echo isset($_GET['month']) ? $_GET['month'] : ''; ?>">
+                   value="<?php echo $_GET['month'] ?? ''; ?>">
         </div>
 
         <div class="col-md-4 d-flex align-items-end">
             <button class="btn btn-primary w-100">Filter</button>
         </div>
-
     </form>
 
-    <!-- 🔥 DELETE OPTIONS -->
+    <!-- 🔥 BULK DELETE FORM START -->
+    <form method="POST">
+
     <div class="mb-3">
-
-        <?php if (!empty($_GET['date'])) { ?>
-            <a href="delete_attendance.php?date=<?php echo $_GET['date']; ?>" 
-               class="btn btn-danger me-2"
-               onclick="return confirm('Delete all attendance for this date?')">
-               🗑 Delete This Date
-            </a>
-        <?php } ?>
-
-        <?php if (!empty($_GET['month'])) { ?>
-            <a href="delete_attendance.php?month=<?php echo $_GET['month']; ?>" 
-               class="btn btn-danger"
-               onclick="return confirm('Delete full month attendance?')">
-               🗑 Delete This Month
-            </a>
-        <?php } ?>
-
+        <button type="submit" name="delete_selected" class="btn btn-danger"
+                onclick="return confirm('Delete selected records?')">
+            🗑 Delete Selected
+        </button>
     </div>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped text-center">
         <tr class="table-dark">
+            <th>
+                <input type="checkbox" onclick="toggleAll(this)">
+            </th>
             <th>Student Name</th>
             <th>Class</th>
             <th>Section</th>
@@ -78,13 +77,10 @@ include "db.php";
 <?php
 $where = "";
 
-// 📅 Date filter
 if (!empty($_GET['date'])) {
     $date = $_GET['date'];
     $where = "WHERE attendance.date = '$date'";
 }
-
-// 📆 Month filter
 elseif (!empty($_GET['month'])) {
     $month = $_GET['month'];
     $where = "WHERE DATE_FORMAT(attendance.date, '%Y-%m') = '$month'";
@@ -99,20 +95,23 @@ $query = "SELECT attendance.id, students.name, students.class, students.section,
 
 $result = mysqli_query($conn, $query);
 
-// ❌ No data message
 if (mysqli_num_rows($result) == 0) {
-    echo "<tr><td colspan='6' class='text-center'>No attendance found 😔</td></tr>";
+    echo "<tr><td colspan='7'>No attendance found 😔</td></tr>";
 } else {
     while ($row = mysqli_fetch_assoc($result)) {
 ?>
         <tr>
+            <!-- 🔥 CHECKBOX -->
+            <td>
+                <input type="checkbox" name="selected[]" value="<?php echo $row['id']; ?>">
+            </td>
+
             <td><?php echo $row['name']; ?></td>
             <td><?php echo $row['class']; ?></td>
             <td><?php echo $row['section']; ?></td>
             <td><?php echo $row['status']; ?></td>
             <td><?php echo $row['date']; ?></td>
 
-            <!-- 🔥 SINGLE DELETE -->
             <td>
                 <a href="delete_attendance.php?id=<?php echo $row['id']; ?>" 
                    class="btn btn-danger btn-sm"
@@ -127,7 +126,18 @@ if (mysqli_num_rows($result) == 0) {
 ?>
 
     </table>
+    </form>
+
 </div>
+
+<!-- 💀 SELECT ALL SCRIPT -->
+<script>
+function toggleAll(source) {
+    let checkboxes = document.querySelectorAll('input[name="selected[]"]');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+}
+</script>
+
 <?php include "footer.php"; ?>
 </body>
 </html>

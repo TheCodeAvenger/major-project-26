@@ -9,14 +9,12 @@ if (!isset($_SESSION['admin'])) {
 include "db.php";
 ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Student</title>
+    <title>Add Student | EduTrack Pro</title>
 
     <link rel="stylesheet" href="style.css">
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -34,29 +32,23 @@ include "db.php";
             <input type="text" name="name" class="form-control" required>
         </div>
 
+        <!-- 💀 FIXED CLASS -->
         <div class="mb-3">
             <label>Class:</label>
             <select name="class" class="form-control" required>
                 <option value="">Select Class</option>
-                <?php
-                $class_query = mysqli_query($conn, "SELECT * FROM classes");
-                while ($c = mysqli_fetch_assoc($class_query)) {
-                    echo "<option value='{$c['class_name']}'>{$c['class_name']}</option>";
-                }
-                ?>
+                <option value="11">11</option>
+                <option value="12">12</option>
             </select>
         </div>
 
+        <!-- 💀 FIXED SECTION -->
         <div class="mb-3">
             <label>Section:</label>
             <select name="section" class="form-control" required>
                 <option value="">Select Section</option>
-                <?php
-                $sec_query = mysqli_query($conn, "SELECT * FROM sections");
-                while ($s = mysqli_fetch_assoc($sec_query)) {
-                    echo "<option value='{$s['section_name']}'>{$s['section_name']}</option>";
-                }
-                ?>
+                <option value="PCM">PCM</option>
+                <option value="PCB">PCB</option>
             </select>
         </div>
 
@@ -72,7 +64,9 @@ include "db.php";
     </form>
 
 </div>
+
 <?php include "footer.php"; ?>
+
 </body>
 </html>
 
@@ -88,7 +82,7 @@ if (isset($_POST['submit'])) {
               VALUES ('$name', '$class', '$section', '$roll_no')";
 
     if (mysqli_query($conn, $query)) {
-        echo "<script>alert('Student Added Successfully!');</script>";
+        echo "<script>alert('Student Added Successfully! ✅'); window.location.href='view_students.php';</script>";
     } else {
         echo "Error: " . mysqli_error($conn);
     }
