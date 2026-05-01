@@ -31,10 +31,8 @@ if (!isset($_SESSION['admin'])) {
         }
 
         .class-card {
-    color: black !important;
-}
-
-
+            color: black !important;
+        }
     </style>
 </head>
 <body>
@@ -73,13 +71,13 @@ if (!isset($_SESSION['admin'])) {
 <script>
 
 let currentClass = "";
+let currentSection = "";
 
 // 💀 STEP 1 → CLASS CLICK
 function showSections(cls){
 
     currentClass = cls;
 
-    // hide classes
     document.getElementById("classes").style.display = "none";
 
     document.getElementById("sections").innerHTML = `
@@ -109,6 +107,8 @@ function showSections(cls){
 // 💀 STEP 2 → SECTION CLICK
 function showSubjects(cls, section){
 
+    currentSection = section;
+
     let subjects = [];
 
     if(section == "PCM"){
@@ -127,7 +127,8 @@ function showSubjects(cls, section){
     subjects.forEach(sub => {
         html += `
             <div class="col-md-4">
-                <div class="card p-3">
+                <div class="card p-3" 
+                     onclick="openSubject('${cls}','${section}','${sub}')">
                     ${sub}
                 </div>
             </div>
@@ -137,6 +138,12 @@ function showSubjects(cls, section){
     html += `</div>`;
 
     document.getElementById("subjects").innerHTML = html;
+}
+
+
+// 💀 STEP 3 → SUBJECT CLICK (MAIN)
+function openSubject(cls, section, subject){
+    window.location.href = `subject_page.php?class=${cls}&section=${section}&subject=${subject}`;
 }
 
 
