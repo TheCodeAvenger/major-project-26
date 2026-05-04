@@ -1,12 +1,13 @@
 <?php
-session_start();
+require "auth_admin.php";   // 🔒 ADMIN SECURITY
+include "db.php";
 
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
+/* 🔒 EXTRA PROTECTION (OPTIONAL BUT RECOMMENDED)
+   agar koi student somehow yaha aa jaye */
+if (isset($_SESSION['student_id'])) {
+    header("Location: student_dashboard.php");
     exit();
 }
-
-include "db.php";
 
 // ➕ Add timetable
 if (isset($_POST['add'])) {

@@ -1,11 +1,5 @@
 <?php  
-session_start();
-
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit();
-}
-
+require "auth_admin.php";   // 💀 NEW SECURITY
 include "db.php";
 
 // 🔥 BULK DELETE LOGIC

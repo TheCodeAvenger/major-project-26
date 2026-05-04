@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit();
-}
-
+require "auth_admin.php";
 include "db.php";
 
 $class = $_GET['class'] ?? '';
@@ -15,90 +9,37 @@ $subject = $_GET['subject'] ?? '';
 /* ================= EXAM UPLOAD ================= */
 if(isset($_POST['upload_exam'])){
     $title = $_POST['title'];
+    $deadline = $_POST['deadline']; // can be empty
 
     $file = $_FILES['question']['name'];
     $tmp = $_FILES['question']['tmp_name'];
-
     $path = "uploads/questions/" . time() . "_" . $file;
 
     move_uploaded_file($tmp, $path);
 
-    mysqli_query($conn, "INSERT INTO exams (class, section, subject, title, question_file)
-                         VALUES ('$class','$section','$subject','$title','$path')");
+    mysqli_query($conn, "INSERT INTO exams (class, section, subject, title, question_file, deadline)
+                         VALUES ('$class','$section','$subject','$title','$path','$deadline')");
 
     header("Location: subject_page.php?class=$class&section=$section&subject=$subject");
+    exit();
 }
 
+/* ================= MARKS ================= */
+if(isset($_POST['give_marks'])){
+    $id = $_POST['submission_id'];
+    $marks = $_POST['marks'];
 
-/* ================= DELETE EXAM ================= */
-if(isset($_GET['delete_exam'])){
-    $id = $_GET['delete_exam'];
-
-    // delete question file
-    $q = mysqli_fetch_assoc(mysqli_query($conn, "SELECT question_file FROM exams WHERE id='$id'"));
-    if($q) @unlink($q['question_file']);
-
-    // delete answer files
-    $ans = mysqli_query($conn, "SELECT answer_file FROM submissions WHERE exam_id='$id'");
-    while($a = mysqli_fetch_assoc($ans)){
-        @unlink($a['answer_file']);
-    }
-
-    mysqli_query($conn, "DELETE FROM submissions WHERE exam_id='$id'");
-    mysqli_query($conn, "DELETE FROM exams WHERE id='$id'");
+    mysqli_query($conn, "UPDATE submissions SET marks='$marks' WHERE id='$id'");
 
     header("Location: subject_page.php?class=$class&section=$section&subject=$subject");
-}
-
-
-/* ================= EDIT TITLE ================= */
-if(isset($_POST['edit_title'])){
-    $id = $_POST['exam_id'];
-    $new = $_POST['new_title'];
-
-    mysqli_query($conn, "UPDATE exams SET title='$new' WHERE id='$id'");
-
-    header("Location: subject_page.php?class=$class&section=$section&subject=$subject");
-}
-
-
-/* ================= ANSWER UPLOAD ================= */
-if(isset($_POST['submit_answer'])){
-    $exam_id = $_POST['exam_id'];
-    $student_name = $_POST['student_name'];
-
-    $file = $_FILES['answer']['name'];
-    $tmp = $_FILES['answer']['tmp_name'];
-
-    $path = "uploads/answers/" . time() . "_" . $file;
-
-    move_uploaded_file($tmp, $path);
-
-    mysqli_query($conn, "INSERT INTO submissions (exam_id, student_name, answer_file)
-                         VALUES ('$exam_id','$student_name','$path')");
-
-    header("Location: subject_page.php?class=$class&section=$section&subject=$subject");
-}
-
-
-/* ================= DELETE SUBMISSION ================= */
-if(isset($_GET['delete_submission'])){
-    $id = $_GET['delete_submission'];
-
-    $file = mysqli_fetch_assoc(mysqli_query($conn, "SELECT answer_file FROM submissions WHERE id='$id'"));
-    if($file) @unlink($file['answer_file']);
-
-    mysqli_query($conn, "DELETE FROM submissions WHERE id='$id'");
-
-    header("Location: subject_page.php?class=$class&section=$section&subject=$subject");
+    exit();
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo $subject; ?> | EduTrack Pro</title>
-
+    <title><?php echo $subject; ?></title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -108,97 +49,105 @@ if(isset($_GET['delete_submission'])){
 
 <div class="container mt-5">
 
-    <h2 class="text-center">📘 <?php echo $subject; ?></h2>
-    <h5 class="text-center mb-4">Class <?php echo $class; ?> - <?php echo $section; ?></h5>
+<h2 class="mb-3">📘 <?php echo $subject; ?></h2>
 
-    <!-- EXAM UPLOAD -->
-    <form method="POST" enctype="multipart/form-data" class="mb-4">
-        <input type="text" name="title" class="form-control mb-2" placeholder="Exam Title" required>
+<!-- ================= UPLOAD FORM ================= -->
+<div class="card p-3 mb-4">
+    <h5>Add New Exam</h5>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label>Exam Title:</label>
+        <input type="text" name="title" class="form-control mb-2" required>
+
+        <label>Deadline:</label>
+        <input type="date" name="deadline" class="form-control mb-2" required>
+
+        <label>Question File:</label>
         <input type="file" name="question" class="form-control mb-2" required>
-        <button name="upload_exam" class="btn btn-success w-100">Upload Exam</button>
-    </form>
 
-    <hr>
+        <button name="upload_exam" class="btn btn-success w-100">
+            Upload Exam
+        </button>
+    </form>
+</div>
+
+<hr>
 
 <?php
 $exams = mysqli_query($conn, "SELECT * FROM exams 
                              WHERE class='$class' AND section='$section' AND subject='$subject'
                              ORDER BY id DESC");
 
-while($exam = mysqli_fetch_assoc($exams)){
+if(mysqli_num_rows($exams)==0){
+    echo "<p>No exams yet</p>";
+}
 
-    $count = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM submissions WHERE exam_id='{$exam['id']}'"));
+while($exam = mysqli_fetch_assoc($exams)){
 ?>
 
 <div class="card p-3 mb-4">
 
-    <!-- TITLE + BADGE -->
-    <h5>
-        <?php echo $exam['title']; ?>
-        <span class="badge bg-dark"><?php echo $count; ?> submissions</span>
-    </h5>
+    <h5><?php echo $exam['title']; ?></h5>
 
-    <!-- ACTIONS -->
-    <div class="mb-2">
-        <a href="<?php echo $exam['question_file']; ?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+    <!-- DEADLINE SHOW -->
+    <?php if(!empty($exam['deadline'])){ ?>
+        <span class="badge bg-danger mb-2">
+            Deadline: <?php echo $exam['deadline']; ?>
+        </span>
+    <?php } ?>
 
-        <a href="?class=<?php echo $class ?>&section=<?php echo $section ?>&subject=<?php echo $subject ?>&delete_exam=<?php echo $exam['id']; ?>"
-           class="btn btn-danger btn-sm"
-           onclick="return confirm('Delete exam + all submissions?')">
-           Delete
-        </a>
-    </div>
+    <br>
 
-    <!-- EDIT TITLE -->
-    <form method="POST" class="mb-2 d-flex gap-2">
-        <input type="hidden" name="exam_id" value="<?php echo $exam['id']; ?>">
-        <input type="text" name="new_title" class="form-control" placeholder="Edit title">
-        <button name="edit_title" class="btn btn-warning btn-sm">Update</button>
-    </form>
-
-    <!-- ANSWER UPLOAD -->
-    <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="exam_id" value="<?php echo $exam['id']; ?>">
-        <input type="text" name="student_name" class="form-control mb-2" placeholder="Student Name" required>
-        <input type="file" name="answer" class="form-control mb-2" required>
-        <button name="submit_answer" class="btn btn-success w-100">Submit Answer</button>
-    </form>
+    <a href="<?php echo $exam['question_file']; ?>" target="_blank" class="btn btn-primary btn-sm mb-3">
+        View Question
+    </a>
 
     <hr>
 
-    <!-- SUBMISSIONS -->
-    <h6>Submissions:</h6>
+    <h6>📥 Submissions</h6>
 
 <?php
 $subs = mysqli_query($conn, "SELECT * FROM submissions WHERE exam_id='{$exam['id']}'");
 
 if(mysqli_num_rows($subs)==0){
-    echo "<p>No submissions</p>";
-} else {
-    while($s = mysqli_fetch_assoc($subs)){
+    echo "<p>No submissions yet</p>";
+}
+
+while($s = mysqli_fetch_assoc($subs)){
 ?>
-    <div class="d-flex justify-content-between align-items-center mb-1">
-        <span><?php echo $s['student_name']; ?></span>
 
-        <div>
-            <a href="<?php echo $s['answer_file']; ?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+    <div class="border p-2 mb-2">
 
-            <a href="?class=<?php echo $class ?>&section=<?php echo $section ?>&subject=<?php echo $subject ?>&delete_submission=<?php echo $s['id']; ?>"
-               class="btn btn-danger btn-sm"
-               onclick="return confirm('Delete submission?')">
-               Delete
+        <strong><?php echo $s['student_name']; ?></strong>
+
+        <div class="mt-1 mb-2">
+            <a href="<?php echo $s['answer_file']; ?>" target="_blank" class="btn btn-primary btn-sm">
+                View Answer
             </a>
         </div>
+
+        <!-- ================= MARKS INPUT ================= -->
+        <form method="POST" class="d-flex gap-2">
+            <input type="hidden" name="submission_id" value="<?php echo $s['id']; ?>">
+
+            <input type="number" name="marks" class="form-control"
+                   placeholder="Enter marks"
+                   value="<?php echo ($s['marks'] !== null) ? $s['marks'] : ''; ?>">
+
+            <button name="give_marks" class="btn btn-success btn-sm">
+                Save
+            </button>
+        </form>
+
     </div>
-<?php }} ?>
+
+<?php } ?>
 
 </div>
 
 <?php } ?>
 
 </div>
-
-<?php include "footer.php"; ?>
 
 </body>
 </html>

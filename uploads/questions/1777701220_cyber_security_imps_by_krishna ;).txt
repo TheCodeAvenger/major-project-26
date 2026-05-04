@@ -1,0 +1,189 @@
+
+# ✅ **UNIT 1 — Cyber Security Fundamentals, Cyber Laws, NCSP**
+
+---
+
+## **1. Cyber Security Fundamentals / CIA / Security Foundation**
+
+**Matching Questions:**
+
+1. **Q3.** How does cybersecurity uphold the principles of Confidentiality, Integrity, and Availability (CIA)? Support your answer with real-world case examples.
+2. **Q8.** Explain the key elements of the Cyber Security Foundation.
+3. **Q27.** What is CIA TRIAD?
+
+---
+
+## **2. Social Media, Social Networking & Cyber Security**
+
+**Matching Questions:**
+— *None*
+
+---
+
+## **3. Cyber Laws — IT Act 2000 / IT Act 2008**
+
+**Matching Questions:**
+
+1. **Q11.** Define and explain any two cyber laws under IT Act 2000 or 2008.
+2. **Q13.** Explain the significance of IT Act 2000 and the amendments introduced in 2008.
+3. **Q19.** Discuss any two provisions of the IT Act 2000/2008 related to cyber laws, explaining their relevance in today's digital world.
+
+---
+
+## **4. National Cyber Security Policy / Initiative**
+
+**Matching Questions:**
+
+1. **Q25.** Mention the purpose of the National Cyber Security Policy.
+2. **Q29.** State the main objectives of the National Cyber Security Policy and explain why such a policy is necessary for India.
+
+---
+
+# ✅ **UNIT 2 — Cyber Attacks**
+
+---
+
+## **1. Cyber Attacks (General Understanding)**
+
+**Matching Questions:**
+
+1. **Q15.** Different types of cyber attacks with suitable real-world examples.
+
+---
+
+## **2. Malware — Virus, Worms, Trojan Horse**
+
+**Matching Questions:**
+
+1. **Q9.** Differentiate between computer worms and Trojan horses.
+
+---
+
+## **3. Vulnerabilities**
+
+**Matching Questions:**
+— *None directly*
+
+---
+
+## **4. Online Attacks — Phishing, Pharming, etc.**
+
+**Matching Questions:**
+
+1. **Q23.** What is phishing?
+2. **Q28.** Explain how users can protect themselves from phishing scams?
+
+---
+
+## **5. DoS / DDoS / SYN Flood / TCP Attacks**
+
+**Matching Questions:**
+
+1. **Q20.** Identify and explain two common types of Denial-of-Service (DoS) attacks.
+2. **Q22.** How DOS affects target systems.
+
+---
+
+## **6. Zombies, Stuxnet**
+
+**Matching Questions:**
+— *None*
+
+---
+
+# ✅ **UNIT 3 — Risk Management & Vulnerability Assessment**
+
+---
+
+## **1. Risk Management Process, Threat Determination, Lifecycle**
+
+**Matching Questions:**
+
+1. **Q7.** Explain the different phases involved in the risk management lifecycle and highlight their importance.
+2. **Q24.** Explain the lifecycle of risk management.
+3. **Q30.** Risk management lifecycle and highlight their importance in cybersecurity.
+
+---
+
+## **2. Security Policy Management / Coverage Matrix**
+
+**Matching Questions:**
+— *None*
+
+---
+
+## **3. Business Continuity Planning / Disaster Recovery**
+
+**Matching Questions:**
+
+1. **Q26.** Explain the concept of business continuity planning.
+
+---
+
+## **4. Vulnerability Assessment / Pen-Testing / Black-box & White-box**
+
+**Matching Questions:**
+
+1. **Q5.** In vulnerability assessment, differentiate between black-box testing and white-box testing approaches, and provide suitable use cases.
+2. **Q10.** What is black-box and white-box testing in vulnerability analysis?
+3. **Q14.** What is Vulnerability Assessment and Penetration Testing (VAPT)?
+4. **Q18.** Discuss the different approaches used in testing system security.
+
+---
+
+# ✅ **UNIT 4 — Architectural Integration, Config Management, Authentication**
+
+---
+
+## **1. Firewalls, Routers, DMZ, Security Devices**
+
+**Matching Questions:**
+
+1. **Q12.** What is a firewall? Explain its working with a diagram.
+2. **Q21.** What is a firewall? Describe how it filters network traffic, and illustrate its functioning with a labeled diagram.
+
+---
+
+## **2. Configuration Management / Certification / Accreditation**
+
+**Matching Questions:**
+— *None*
+
+---
+
+## **3. Authentication & Cryptosystems**
+
+**Matching Questions:**
+
+1. **Q1.** Define authentication.
+2. **Q6.** Describe different types of authentication methods and explain where each is commonly applied.
+
+---
+
+## **4. IDS / IPS**
+
+**Matching Questions:**
+
+1. **Q2.** Differentiate between Intrusion Detection Systems (IDS) and Intrusion Prevention Systems (IPS). Provide examples and discuss advantages and drawbacks.
+2. **Q4.** What limitations exist in traditional IDS, and why are they insufficient against modern threats?
+3. **Q16.** Describe Intrusion Detection Systems (IDS) and its functions.
+4. **Q17.** Intrusion Prevention Systems (IPS). How do they contribute to securing networks?
+
+---
+
+# ✅ **UNIT 5 — Security Communications & Prevention Systems**
+
+---
+
+## **1. Secure Communications**
+
+**Matching Questions:**
+— *None*
+
+---
+
+## **2. Prevention Systems (IDS/IPS/Firewalls overlap)**
+
+**Matching Questions:**
+— *No new question (already covered in Unit 4)*
+

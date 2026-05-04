@@ -7,15 +7,44 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM admin WHERE username='$username' AND password='$password'";
-    $result = mysqli_query($conn, $query);
+    // 🔴 ADMIN LOGIN
+   $admin_query = "SELECT * FROM admin WHERE username='$username' AND password='$password'";
+$admin_result = mysqli_query($conn, $admin_query);
 
-    if (mysqli_num_rows($result) > 0) {
-        $_SESSION['admin'] = $username;
-        header("Location: dashboard.php");
-    } else {
-        echo "<script>alert('Invalid Login');</script>";
-    }
+if (mysqli_num_rows($admin_result) > 0) {
+
+    // 💀 IMPORTANT: student session hatao
+    unset($_SESSION['student_id']);
+    unset($_SESSION['student_name']);
+    unset($_SESSION['class']);
+    unset($_SESSION['section']);
+
+    $_SESSION['admin'] = $username;
+
+    header("Location: dashboard.php");
+    exit();
+}
+
+    // 🔵 STUDENT LOGIN
+    $student_query = "SELECT * FROM students WHERE username='$username' AND password='$password'";
+$student_result = mysqli_query($conn, $student_query);
+
+if (mysqli_num_rows($student_result) > 0) {
+
+    $row = mysqli_fetch_assoc($student_result);
+
+    // 💀 IMPORTANT: admin session hatao
+    unset($_SESSION['admin']);
+
+    $_SESSION['student_id'] = $row['id'];
+    $_SESSION['student_name'] = $row['name'];
+    $_SESSION['class'] = $row['class'];
+    $_SESSION['section'] = $row['section'];
+
+    header("Location: student_dashboard.php");
+    exit();
+}
+    echo "<script>alert('Invalid Login ❌');</script>";
 }
 ?>
 
